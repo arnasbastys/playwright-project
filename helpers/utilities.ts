@@ -8,6 +8,8 @@ export const validateLinksInPage = async (
     return Array.from(document.links).map((item) => item.href);
   });
 
+  console.log({ "Checking links": hrefs });
+
   const linkArray = hrefs.map((link) => {
     return request.get(link);
   });
@@ -23,8 +25,8 @@ export const validateLinksInPage = async (
   validResults.forEach((response: APIResponse) => {
     if (response.status() > 399) {
       console.log({
-        "Url with status higher than 399": response.status(),
-        url: response.url(),
+        "URL with status higher than 399": response.status(),
+        URL: response.url(),
       });
     }
   });
