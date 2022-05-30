@@ -12,7 +12,7 @@ test.describe("Parse links", () => {
     await validateLinksInPage(page, request);
   });
 
-  test.only("Set geolocation and evaluate it in browser context", async ({
+  test("Set geolocation and evaluate it in browser context", async ({
     page,
   }) => {
 
