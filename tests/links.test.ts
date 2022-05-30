@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { randomBytes } from "crypto";
+import internal from "stream";
 import { validateLinksInPage } from "../helpers/utilities";
 
 test.describe("Parse links", () => {
@@ -10,10 +12,18 @@ test.describe("Parse links", () => {
     await validateLinksInPage(page, request);
   });
 
-  test("Set geolocation and evaluate it in browser context", async ({
+  test.only("Set geolocation and evaluate it in browser context", async ({
     page,
   }) => {
-    const geolocation = { latitude: 59.95, longitude: 30.31667 };
+
+    const randomCoordinate = () => {
+      const randomLongtitude = parseFloat((Math.random() * 360 - 180).toFixed(5))
+      const randomLatitude = parseFloat((Math.random() * 180 - 90).toFixed(5))
+
+      return { latitude: randomLatitude, longitude: randomLongtitude };
+    };
+
+    const geolocation = randomCoordinate();
 
     await page.context().grantPermissions(["geolocation"]);
     await page.context().setGeolocation(geolocation);
