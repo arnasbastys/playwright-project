@@ -10,9 +10,15 @@ export const validateLinksInPage = async (
 
   console.log({ "Checking links": hrefs });
 
-  const linkArray = hrefs.map((link) => {
-    return request.get(link);
-  });
+  const linkArray = hrefs
+    .filter((link) =>
+      link.startsWith("mailto")
+        ? console.log({ "Email address not a link": link })
+        : link
+    )
+    .map((link) => {
+      return request.get(link);
+    });
 
   const results = await Promise.all(linkArray.map((p) => p.catch((e) => e)));
 
@@ -30,4 +36,11 @@ export const validateLinksInPage = async (
       });
     }
   });
+};
+
+export const randomCoordinate = () => {
+  const randomLongtitude = parseFloat((Math.random() * 360 - 180).toFixed(5));
+  const randomLatitude = parseFloat((Math.random() * 180 - 90).toFixed(5));
+
+  return { latitude: randomLatitude, longitude: randomLongtitude };
 };

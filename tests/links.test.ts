@@ -1,28 +1,19 @@
 import { expect, test } from "@playwright/test";
-import { randomBytes } from "crypto";
-import internal from "stream";
-import { validateLinksInPage } from "../helpers/utilities";
+import { randomCoordinate, validateLinksInPage } from "../helpers/utilities";
 
 test.describe("Parse links", () => {
-  test("Parse all links and check if they are < 400", async ({
+  test("Validate links and screenshot of personal landing page", async ({
     page,
     request,
   }) => {
-    await page.goto("https://developer.mozilla.org/");
+    await page.goto("https://arnasbastys.lt/dist/");
     await validateLinksInPage(page, request);
+    await expect(page).toHaveScreenshot();
   });
 
   test("Set geolocation and evaluate it in browser context", async ({
     page,
   }) => {
-
-    const randomCoordinate = () => {
-      const randomLongtitude = parseFloat((Math.random() * 360 - 180).toFixed(5))
-      const randomLatitude = parseFloat((Math.random() * 180 - 90).toFixed(5))
-
-      return { latitude: randomLatitude, longitude: randomLongtitude };
-    };
-
     const geolocation = randomCoordinate();
 
     await page.context().grantPermissions(["geolocation"]);
@@ -50,5 +41,21 @@ test.describe("Parse links", () => {
 
     expect(geolocation).toEqual(contextGeolocation);
   });
+  
+  test("Test todo list with websockets", async ({page}) => {
+    await page.goto("http://todomvc-socketstream.herokuapp.com");
+
+    page.on('websocket', ws => {
+      console.log(`WebSocket opened: ${ws.url()}>`);
+    });
+
+    await page.fill('#new-todo', 'Websocket test');
+
+    await page.waitForLoadState('networkidle');
+
+    await page.keyboard.press('Enter')
+
+    await expect(page.locator('#todo-list li').last()).toHaveText('Websocket test')
+  })
 
 });
