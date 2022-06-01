@@ -38,9 +38,14 @@ export const validateLinksInPage = async (
   });
 };
 
-export const randomCoordinate = () => {
+export const randomCoordinate = () : coordinates => {
   const randomLongtitude = parseFloat((Math.random() * 360 - 180).toFixed(5));
   const randomLatitude = parseFloat((Math.random() * 180 - 90).toFixed(5));
 
   return { latitude: randomLatitude, longitude: randomLongtitude };
 };
+
+export interface coordinates {
+  latitude: number;
+  longitude: number;
+}

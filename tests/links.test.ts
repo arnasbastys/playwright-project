@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { randomCoordinate, validateLinksInPage } from "../helpers/utilities";
+import {
+  coordinates,
+  randomCoordinate,
+  validateLinksInPage,
+} from "../helpers/utilities";
 
 test.describe("Parse links", () => {
   test("Validate links and screenshot of personal landing page", async ({
@@ -27,7 +31,7 @@ test.describe("Parse links", () => {
 
     await page.locator("text=Using the Geolocation API").first().click();
 
-    const contextGeolocation = await page.evaluate(
+    const contextGeolocation: coordinates = await page.evaluate(
       () =>
         new Promise((resolve) =>
           navigator.geolocation.getCurrentPosition((position) => {
@@ -41,21 +45,22 @@ test.describe("Parse links", () => {
 
     expect(geolocation).toEqual(contextGeolocation);
   });
-  
-  test("Test todo list with websockets", async ({page}) => {
+
+  test("Test todo list with websockets", async ({ page }) => {
     await page.goto("http://todomvc-socketstream.herokuapp.com");
 
-    page.on('websocket', ws => {
+    page.on("websocket", (ws) => {
       console.log(`WebSocket opened: ${ws.url()}>`);
     });
 
-    await page.fill('#new-todo', 'Websocket test');
+    await page.fill("#new-todo", "Websocket test");
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
-    await page.keyboard.press('Enter')
+    await page.keyboard.press("Enter");
 
-    await expect(page.locator('#todo-list li').last()).toHaveText('Websocket test')
-  })
-
+    await expect(page.locator("#todo-list li").last()).toHaveText(
+      "Websocket test"
+    );
+  });
 });
